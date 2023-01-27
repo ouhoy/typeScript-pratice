@@ -1,0 +1,2 @@
+# typeScript-pratice
+Practing ts
