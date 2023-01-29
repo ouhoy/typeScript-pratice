@@ -12,3 +12,22 @@ function generateError(message, code) {
     throw { message, code };
 }
 generateError("An error occurred", 500);
+class Department {
+    name;
+    employees = [];
+    constructor(n) {
+        this.name = n;
+    }
+    describe() {
+        console.log('Department: ' + this.name);
+    }
+    addEmployee(employee) {
+        // validation etc
+        this.employees.push(employee);
+    }
+    printEmployeeInformation() {
+        console.log(this.employees.length);
+        console.log(this.employees);
+    }
+}
+const accounting = new Department('Accounting');
