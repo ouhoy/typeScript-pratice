@@ -22,7 +22,7 @@ class Department {
   public name: string;
   private employees: string[] = [];
 
-  constructor(n: string) {
+  constructor(private readonly id:string,n: string) {
     this.name = n;
   }
 
@@ -41,4 +41,4 @@ class Department {
   }
 }
 
-const accounting = new Department('Accounting');
+const accounting = new Department("u1",'Accounting');

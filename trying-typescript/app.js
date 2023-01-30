@@ -13,9 +13,11 @@ function generateError(message, code) {
 }
 generateError("An error occurred", 500);
 class Department {
+    id;
     name;
     employees = [];
-    constructor(n) {
+    constructor(id, n) {
+        this.id = id;
         this.name = n;
     }
     describe() {
@@ -30,4 +32,4 @@ class Department {
         console.log(this.employees);
     }
 }
-const accounting = new Department('Accounting');
+const accounting = new Department("u1", 'Accounting');
