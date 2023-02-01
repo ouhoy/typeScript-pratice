@@ -19,26 +19,36 @@ function generateError(message: string, code: number): never {
 generateError("An error occurred", 500)
 
 class Department {
-  public name: string;
-  private employees: string[] = [];
+    public name: string;
+    protected employees: string[] = [];
 
-  constructor(private readonly id:string,n: string) {
-    this.name = n;
-  }
+    constructor(private readonly id: string, department: string) {
+        this.name = department;
+    }
 
-  describe(this: Department) {
-    console.log('Department: ' + this.name);
-  }
+    describe(this: Department) {
+        console.log('Department: ' + this.name);
+    }
 
-  addEmployee(employee: string) {
-    // validation etc
-    this.employees.push(employee);
-  }
+    addEmployee(employee: string) {
+        // validation etc
+        this.employees.push(employee);
+    }
 
-  printEmployeeInformation() {
-    console.log(this.employees.length);
-    console.log(this.employees);
-  }
+    printEmployeeInformation() {
+        console.log(this.employees.length);
+        console.log(this.employees);
+    }
 }
 
-const accounting = new Department("u1",'Accounting');
+const accounting = new Department("u1", 'Accounting');
+
+class ItDepartment extends Department {
+
+    constructor(id: string, public admins: string[]) {
+        super(id, "IT");
+    }
+
+}
+
+const engineering = new ItDepartment("u2", ["Abdallah"])

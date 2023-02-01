@@ -16,9 +16,9 @@ class Department {
     id;
     name;
     employees = [];
-    constructor(id, n) {
+    constructor(id, department) {
         this.id = id;
-        this.name = n;
+        this.name = department;
     }
     describe() {
         console.log('Department: ' + this.name);
@@ -33,3 +33,11 @@ class Department {
     }
 }
 const accounting = new Department("u1", 'Accounting');
+class ItDepartment extends Department {
+    admins;
+    constructor(id, admins) {
+        super(id, "IT");
+        this.admins = admins;
+    }
+}
+const engineering = new ItDepartment("u2", ["Abdallah"]);
