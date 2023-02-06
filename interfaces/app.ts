@@ -114,10 +114,50 @@ const v2 = new Car;
 
 function userVehicle(vehicle: Vehicle): void {
 
-    vehicle.drive()
 
     // Class methods guard
-    if (vehicle instanceof Truck) vehicle.loadCargo()
+    if (vehicle instanceof Truck) {
+        vehicle.loadCargo()
+        vehicle.drive()
+        return
+    }
 
+    vehicle.drive()
 
 }
+
+userVehicle(v1)
+userVehicle(v2)
+
+interface Bird {
+    type: "bird";
+    flyingSpeed: number
+}
+
+interface Horse {
+    type: "horse";
+    runningSpeed: number
+}
+
+type Animal = Horse | Bird;
+
+function moveAnimal(animal: Animal) {
+    let speed;
+
+    switch (animal.type) {
+        case "bird":
+            speed = animal.flyingSpeed
+            break
+        case "horse":
+            speed = animal.runningSpeed
+
+    }
+
+    console.log(`Moving with speed: ${speed}`)
+}
+
+moveAnimal({type: "bird", flyingSpeed: 23})
+
+const userInput = document.getElementById("user-input")! as HTMLInputElement;
+
+userInput.value = "Hello from typeScript";
