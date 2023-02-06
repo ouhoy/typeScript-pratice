@@ -105,3 +105,4 @@ const errorContainer = {
     userName: "Username can't contain numbers or special characters",
     password: "The password must contain at least 8 characters."
 };
+console.log(errorContainer);
