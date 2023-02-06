@@ -21,17 +21,63 @@ class User {
         console.log(`${phrase} ${this.name} ${this.age} years old!!`);
     }
 }
+var Privileges;
+(function (Privileges) {
+    Privileges[Privileges["FullAccess"] = 0] = "FullAccess";
+    Privileges[Privileges["Edit"] = 1] = "Edit";
+    Privileges[Privileges["View"] = 2] = "View";
+})(Privileges || (Privileges = {}));
 const userOne = new User("Abdellah", 23);
 userOne.greet("Hi there - I am");
 const emp1 = {
     name: "Abdellah",
-    privileges: [],
+    privileges: [Privileges.FullAccess],
     startDate: new Date()
 };
+const emp2 = {
+    name: "Dahmou",
+    privileges: [Privileges.Edit],
+    startDate: new Date()
+};
+// type Numeric = number | boolean;
+// type Universal = Combinable & Numeric
 function add(a, b) {
-    // Using type guards 
+    // Using type guards
     if (typeof a === "string" || typeof b === "string") {
         return a.toString() + b.toString();
     }
     return a + b;
+}
+add(1, "1");
+function printEmployeeInformation(employee) {
+    console.log(`Name: ${employee.name}`);
+    // Property guards
+    if ("privileges" in employee)
+        console.log(`Privileges: ${employee.privileges}`);
+    if ("startDate" in employee)
+        console.log(`Privileges: ${employee.startDate}`);
+}
+printEmployeeInformation(emp1);
+printEmployeeInformation(emp2);
+printEmployeeInformation({ name: "James", privileges: [Privileges.View] });
+class Truck {
+    drive() {
+        console.log("Driving a truck...");
+    }
+    loadCargo() {
+        console.log("loading cargo...");
+    }
+}
+class Car {
+    drive() {
+        console.log("Driving a car...");
+    }
+}
+const v1 = new Truck;
+const v2 = new Car;
+function userVehicle(vehicle) {
+    vehicle.drive();
+    // Class methods guard
+    if (vehicle instanceof Truck)
+        vehicle.loadCargo();
 }
