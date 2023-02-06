@@ -161,3 +161,13 @@ moveAnimal({type: "bird", flyingSpeed: 23})
 const userInput = document.getElementById("user-input")! as HTMLInputElement;
 
 userInput.value = "Hello from typeScript";
+
+interface ErrorContainer {
+    [prop: string]: string
+}
+
+const errorContainer: ErrorContainer = {
+    email: "Not a valid email!!",
+    userName: "Username can't contain numbers or special characters",
+    password: "The password must contain at least 8 characters."
+}

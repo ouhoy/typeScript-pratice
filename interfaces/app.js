@@ -100,3 +100,8 @@ function moveAnimal(animal) {
 moveAnimal({ type: "bird", flyingSpeed: 23 });
 const userInput = document.getElementById("user-input");
 userInput.value = "Hello from typeScript";
+const errorContainer = {
+    email: "Not a valid email!!",
+    userName: "Username can't contain numbers or special characters",
+    password: "The password must contain at least 8 characters."
+};
