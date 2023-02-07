@@ -24,3 +24,34 @@ function extractAndConvert<T extends object, U extends keyof T>(obj: T, key: U) 
 }
 
 extractAndConvert({name: "TypeScript"}, "name")
+
+class DataStorage<T> {
+    private data: T[] = [];
+
+    addItem(item: T) {
+        this.data.push(item)
+    }
+
+    removeItem(item: T) {
+        this.data.splice(this.data.indexOf(item), 1)
+    }
+
+    getItems() {
+        return [...this.data]
+    }
+}
+
+// Getting only strings
+const textStorage = new DataStorage<string>();
+textStorage.addItem("JavaScript")
+textStorage.addItem("NodeJS")
+textStorage.removeItem("NodeJS")
+console.log(textStorage.getItems())
+
+
+//Getting only numbers
+const numberStorage = new DataStorage<number>();
+numberStorage.addItem(1337)
+numberStorage.addItem(101)
+numberStorage.removeItem(101)
+console.log(numberStorage.getItems())
