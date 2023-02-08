@@ -9,11 +9,13 @@ const promise = new Promise<string>((resolve) => {
 
 promise.then(data => console.log(data))
 
+// Here generic types lock in a type
 function merge<T extends object, U extends object>(objA: object, objB: object) {
 
     return Object.assign(objA, objB)
 
 }
+
 
 const mergedObj = merge({name: "james"}, {age: 23})
 console.log(mergedObj)
