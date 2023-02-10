@@ -34,4 +34,44 @@ Person = __decorate([
 ], Person);
 const person = new Person();
 console.log(person);
+function LogOne(target, propertyName) {
+    console.log('Property decorator!');
+    console.log(target, propertyName);
+}
+function Logs(target, name, descriptor) {
+    console.log("Method decorator");
+    console.log(target);
+    console.log(name);
+    console.log(descriptor);
+}
+function Log(target, name, descriptor) {
+    console.log("Accessor decorator");
+    console.log(target);
+    console.log(name);
+    console.log(descriptor);
+}
+class Product {
+    title;
+    _price;
+    set price(val) {
+        if (val > 0)
+            this._price = val;
+    }
+    constructor(title, price) {
+        this.title = title;
+        this._price = price;
+    }
+    getPriceWithTax(tax) {
+        return this._price * (1 + tax);
+    }
+}
+__decorate([
+    LogOne
+], Product.prototype, "title", void 0);
+__decorate([
+    Log
+], Product.prototype, "price", null);
+__decorate([
+    Logs
+], Product.prototype, "getPriceWithTax", null);
 //# sourceMappingURL=app.js.map
