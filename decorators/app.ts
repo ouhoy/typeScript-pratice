@@ -9,15 +9,21 @@ function Logger(logString: string) {
 }
 
 function WithTemplate(template: string, hookId: string) {
-    return function (constructor: any) {
+    return function <T extends { new(..._: any[]): { name: string } }>(originalConstructor: T) {
 
         const hookEl = document.getElementById(hookId)
-        const p = new constructor();
-        if (hookEl) {
-            hookEl.innerHTML = template
-            hookEl.querySelector("h1")!.innerText = p.name
-        }
 
+        return class extends originalConstructor {
+
+            constructor(..._: any[]) {
+                super();
+
+                if (hookEl) {
+                    hookEl.innerHTML = template
+                    hookEl.querySelector("h1")!.innerText = this.name
+                }
+            }
+        }
     }
 }
 
@@ -58,6 +64,16 @@ function Log(target: any, name: string, descriptor: PropertyDescriptor) {
 
 }
 
+function ParamLog(target: any, name: string | symbol, position: number) {
+
+    console.log("Parameter decorator")
+    console.log(target)
+    console.log(name)
+    console.log(position)
+
+
+}
+
 class Product {
     @LogOne
     title: string;
@@ -73,7 +89,25 @@ class Product {
     }
 
     @Logs
-    getPriceWithTax(tax: number) {
+    getPriceWithTax(@ParamLog tax: number) {
         return this._price * (1 + tax)
     }
 }
+
+function AutoBind(target: any, methodName: string | symbol | number) {
+
+}
+class Printer {
+    message = "This works";
+
+    showMessage() {
+        console.log(this.message)
+    }
+}
+
+const printMessage = new Printer();
+
+const btn = document.querySelector("button")!
+
+btn.addEventListener("click", printMessage.showMessage.bind(printMessage))
+

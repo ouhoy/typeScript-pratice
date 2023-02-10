@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 // Decorators
 function Logger(logString) {
     return function (target) {
@@ -13,13 +16,17 @@ function Logger(logString) {
     };
 }
 function WithTemplate(template, hookId) {
-    return function (constructor) {
+    return function (originalConstructor) {
         const hookEl = document.getElementById(hookId);
-        const p = new constructor();
-        if (hookEl) {
-            hookEl.innerHTML = template;
-            hookEl.querySelector("h1").innerText = p.name;
-        }
+        return class extends originalConstructor {
+            constructor(..._) {
+                super();
+                if (hookEl) {
+                    hookEl.innerHTML = template;
+                    hookEl.querySelector("h1").innerText = this.name;
+                }
+            }
+        };
     };
 }
 // @Logger("LOGGING - PERSON")
@@ -50,6 +57,12 @@ function Log(target, name, descriptor) {
     console.log(name);
     console.log(descriptor);
 }
+function ParamLog(target, name, position) {
+    console.log("Parameter decorator");
+    console.log(target);
+    console.log(name);
+    console.log(position);
+}
 class Product {
     title;
     _price;
@@ -72,6 +85,17 @@ __decorate([
     Log
 ], Product.prototype, "price", null);
 __decorate([
-    Logs
+    Logs,
+    __param(0, ParamLog)
 ], Product.prototype, "getPriceWithTax", null);
-//# sourceMappingURL=app.js.map
+function AutoBind(target, methodName) {
+}
+class Printer {
+    message = "This works";
+    showMessage() {
+        console.log(this.message);
+    }
+}
+const printMessage = new Printer();
+const btn = document.querySelector("button");
+btn.addEventListener("click", printMessage.showMessage.bind(printMessage));
