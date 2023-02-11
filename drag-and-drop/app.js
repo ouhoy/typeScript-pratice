@@ -5,6 +5,29 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+function $(selector, selectAll) {
+    if (selectAll === void 0) { selectAll = false; }
+    return selectAll ? document.querySelectorAll(selector) : document.querySelector(selector);
+}
+function validateInputs(validatableInput) {
+    var isValid = true;
+    if (validatableInput.required) {
+        isValid = isValid && validatableInput.value.toString().trim().length !== 0;
+    }
+    if (validatableInput.minLength != null && typeof validatableInput.minLength === "string") {
+        isValid = isValid && validatableInput.value.toString().length > validatableInput.minLength;
+    }
+    if (validatableInput.minLength != null && typeof validatableInput.maxLength === "string") {
+        isValid = isValid && validatableInput.value.toString().length < validatableInput.maxLength;
+    }
+    if (validatableInput.minLength != null && typeof validatableInput.min === "number") {
+        isValid = isValid && validatableInput.value > validatableInput.min;
+    }
+    if (validatableInput.minLength != null && typeof validatableInput.max === "number") {
+        isValid = isValid && validatableInput.value < validatableInput.max;
+    }
+    return isValid;
+}
 function autoBind(target, methodName, descriptor) {
     var originalMethod = descriptor.value;
     var adjustedDescriptor = {
@@ -14,10 +37,6 @@ function autoBind(target, methodName, descriptor) {
         }
     };
     return adjustedDescriptor;
-}
-function $(selector, selectAll) {
-    if (selectAll === void 0) { selectAll = false; }
-    return selectAll ? document.querySelectorAll(selector) : document.querySelector(selector);
 }
 var ProjectInput = /** @class */ (function () {
     function ProjectInput() {
@@ -35,8 +54,26 @@ var ProjectInput = /** @class */ (function () {
     ProjectInput.prototype.gatherUserInput = function () {
         var enteredTitle = this.titleInputElement.value;
         var enteredDescription = this.descriptionInputElement.value;
-        var enteredPeople = this.peopleInputElement.value;
-        if (enteredTitle.trim().length === 0 || enteredDescription.trim().length === 0 || Number(enteredPeople) < 0) {
+        var enteredPeople = Number(this.peopleInputElement.value);
+        var validatedTitle = {
+            value: enteredTitle,
+            required: true,
+            maxLength: 128,
+            minLength: 8
+        };
+        var validatedDescription = {
+            value: enteredDescription,
+            required: true,
+            maxLength: 512,
+            minLength: 8
+        };
+        var validatedPeople = {
+            value: enteredDescription,
+            required: true,
+            min: 1,
+            max: 24
+        };
+        if (!validateInputs(validatedTitle) || !validateInputs(validatedDescription) || !validateInputs(validatedPeople)) {
             return alert("Please enter a valid input!");
         }
         return [enteredTitle, enteredDescription, Number(enteredPeople)];
@@ -47,6 +84,7 @@ var ProjectInput = /** @class */ (function () {
         if (userInput) {
             var title = userInput[0], description = userInput[1], people = userInput[2];
             console.log(title, description, people);
+            this.element.reset();
         }
     };
     ProjectInput.prototype.configure = function () {
