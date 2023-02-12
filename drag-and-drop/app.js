@@ -14,10 +14,10 @@ function validateInputs(validatableInput) {
     if (validatableInput.required) {
         isValid = isValid && validatableInput.value.toString().trim().length !== 0;
     }
-    if (validatableInput.minLength != null && typeof validatableInput.minLength === "string") {
+    if (validatableInput.minLength != null) {
         isValid = isValid && validatableInput.value.toString().length > validatableInput.minLength;
     }
-    if (validatableInput.minLength != null && typeof validatableInput.maxLength === "string") {
+    if (validatableInput.maxLength != null) {
         isValid = isValid && validatableInput.value.toString().length < validatableInput.maxLength;
     }
     if (validatableInput.minLength != null && typeof validatableInput.min === "number") {
@@ -38,6 +38,32 @@ function autoBind(target, methodName, descriptor) {
     };
     return adjustedDescriptor;
 }
+var ProjectState = /** @class */ (function () {
+    function ProjectState() {
+        this.listeners = [];
+        this.projects = [];
+    }
+    ProjectState.getInstance = function () {
+        if (this.instance) {
+            return this.instance;
+        }
+        this.instance = new ProjectState();
+        return this.instance;
+    };
+    ProjectState.prototype.addListener = function (listenerFunction) {
+        this.listeners.push(listenerFunction);
+    };
+    ProjectState.prototype.addProject = function (title, description, numberOfPeople) {
+        var newProject = { title: title, description: description, numberOfPeople: numberOfPeople, id: Math.random().toString() };
+        this.projects.push(newProject);
+        for (var _i = 0, _a = this.listeners; _i < _a.length; _i++) {
+            var listenerFunction = _a[_i];
+            listenerFunction(this.projects.slice());
+        }
+    };
+    return ProjectState;
+}());
+var projectStart = ProjectState.getInstance();
 var ProjectInput = /** @class */ (function () {
     function ProjectInput() {
         this.templateElement = $("#project-input");
@@ -83,7 +109,7 @@ var ProjectInput = /** @class */ (function () {
         var userInput = this.gatherUserInput();
         if (userInput) {
             var title = userInput[0], description = userInput[1], people = userInput[2];
-            console.log(title, description, people);
+            projectStart.addProject(title, description, people);
             this.element.reset();
         }
     };
@@ -98,5 +124,42 @@ var ProjectInput = /** @class */ (function () {
     ], ProjectInput.prototype, "submitHandler", null);
     return ProjectInput;
 }());
+var ProjectList = /** @class */ (function () {
+    function ProjectList(type) {
+        var _this = this;
+        this.type = type;
+        this.templateElement = $("#project-list");
+        this.hostElement = $("#app");
+        var importedNode = document.importNode(this.templateElement.content, true);
+        this.element = importedNode.firstElementChild;
+        this.assignedProjects = [];
+        this.element.id = "".concat(this.type, "-projects");
+        this.attach();
+        this.renderContent();
+        projectStart.addListener(function (projects) {
+            _this.assignedProjects = projects;
+            _this.renderProjects();
+        });
+    }
+    ProjectList.prototype.renderProjects = function () {
+        var listElement = $("#".concat(this.type, "-projects-list"));
+        for (var _i = 0, _a = this.assignedProjects; _i < _a.length; _i++) {
+            var projectItem = _a[_i];
+            var listItem = document.createElement("li");
+            listItem.textContent = projectItem.title;
+            listElement.appendChild(listItem);
+        }
+    };
+    ProjectList.prototype.renderContent = function () {
+        this.element.querySelector("ul").id = "".concat(this.type, "-projects-list");
+        this.element.querySelector("h2").textContent = this.type.toUpperCase() + " PROJECTS";
+    };
+    ProjectList.prototype.attach = function () {
+        this.hostElement.insertAdjacentElement("beforeend", this.element);
+    };
+    return ProjectList;
+}());
 var projectInput = new ProjectInput();
+var activeProject = new ProjectList("active");
+var finishedProject = new ProjectList("finished");
 //# sourceMappingURL=app.js.map
